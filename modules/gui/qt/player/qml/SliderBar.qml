@@ -28,8 +28,30 @@ import VLC.MainInterface
 T.ProgressBar {
     id: control
 
-    readonly property real _hoveredScalingFactor: 1.8
+    // Scale applied to the bar while hovered or dragged (1.8 by default; the control bar uses 1.0 to keep a fixed track)
+    property real hoverScalingFactor: 1.8
+    readonly property real _hoveredScalingFactor: hoverScalingFactor
+    // Handle scale in the large (hover/drag) state
+    property real largeHandleFactor: 0.8 * _hoveredScalingFactor
     property int barHeight: VLCStyle.dp(5, VLCStyle.scale)
+    // Optional handle overrides (0 / invalid = default handle). Used by the redesigned control bar.
+    property real handleWidthOverride: 0
+    property real handleHeightOverride: 0
+    property real handleRadiusOverride: -1
+    property color handleColorOverride: "transparent"
+    // Optional played-part colour override (transparent = theme foreground)
+    property color progressColorOverride: "transparent"
+    // Figma control bar: the handle is always shown, and there is no buffer indicator
+    property bool handleAlwaysVisible: false
+    property bool bufferVisible: true
+    // Figma control bar: no time tooltip while hovering or dragging
+    property bool toolTipVisible: true
+    // Figma control bar geometry: track and played corner radius, and the played vertical inset
+    property real trackRadiusOverride: -1
+    property real progressRadiusOverride: -1
+    property real progressInsetOverride: 0
+    // Colour of the played part, also used for chapters already played
+    readonly property color _playedColor: progressColorOverride.a > 0 ? progressColorOverride : theme.fg.primary
     readonly property real _scaledBarHeight: control.barHeight * _hoveredScalingFactor
     readonly property real _scaledY: (-control.barHeight / 2) * (control._hoveredScalingFactor - 1)
 
@@ -71,7 +93,7 @@ T.ProgressBar {
         onTriggered: control._isSeekPointsShown = false
     }
 
-    Widgets.PointingToolTipAttached.visible: (hoverHandler.hovered || control.visualFocus || dragHandler.active)
+    Widgets.PointingToolTipAttached.visible: control.toolTipVisible && (hoverHandler.hovered || control.visualFocus || dragHandler.active)
 
     Widgets.PointingToolTipAttached.text: {
         if (!Widgets.PointingToolTipAttached.instance?.visible)
@@ -324,7 +346,7 @@ T.ProgressBar {
             visible: !Player.hasChapters
             color: control.backgroundColor
             anchors.fill: parent
-            radius: implicitHeight
+            radius: control.trackRadiusOverride >= 0 ? control.trackRadiusOverride : implicitHeight
         }
 
         Repeater {
@@ -357,7 +379,7 @@ T.ProgressBar {
                     readonly property bool _hovered: hoverHandler.hovered &&
                                             (hoverHandler.point.position.x > x && hoverHandler.point.position.x < x+width)
 
-                    color: _currentChapter < 0 ? theme.fg.primary : control.backgroundColor
+                    color: _currentChapter < 0 ? control._playedColor : control.backgroundColor
                     width: sliderRect.width * seekpointsRect.endPosition - x - control._seekPointsDistance
                     x: sliderRect.width * seekpointsRect.startPosition
 
@@ -366,11 +388,13 @@ T.ProgressBar {
                         anchors.left: parent.left
                         anchors.top: parent.top
                         anchors.bottom: parent.bottom
-                        radius: parent.radius
+                        anchors.topMargin: control.progressInsetOverride
+                        anchors.bottomMargin: control.progressInsetOverride
+                        radius: control.progressRadiusOverride >= 0 ? control.progressRadiusOverride : parent.radius
 
                         width: sliderRect.width * control.visualPosition - parent.x - control._seekPointsDistance
                         visible: parent._currentChapter === 0
-                        color: theme.fg.primary
+                        color: control._playedColor
 
                         // We use dynamic mutability group because time interpolation
                         // may induce rapid change:
@@ -407,7 +431,7 @@ T.ProgressBar {
                         }
                         PropertyChanges { target: seekpointsRect; height: control.barHeight }
                         PropertyChanges { target: seekpointsRect; y: 0 }
-                        PropertyChanges { target: seekpointsRect; radius: control._seekPointsRadius }
+                        PropertyChanges { target: seekpointsRect; radius: control.trackRadiusOverride >= 0 ? control.trackRadiusOverride : control._seekPointsRadius }
                     },
                     State {
                         name: "visibleLarge"
@@ -417,7 +441,7 @@ T.ProgressBar {
                         }
                         PropertyChanges { target: seekpointsRect; height: control._scaledBarHeight }
                         PropertyChanges { target: seekpointsRect; y: control._scaledY }
-                        PropertyChanges { target: seekpointsRect; radius: control._scaledSeekPointsRadius }
+                        PropertyChanges { target: seekpointsRect; radius: control.trackRadiusOverride >= 0 ? control.trackRadiusOverride : control._scaledSeekPointsRadius }
                     }
                 ]
 
@@ -429,11 +453,14 @@ T.ProgressBar {
 
         Rectangle {
             id: progressRect
-            width: control.visualPosition * parent.width
+            // The played part is inset from the track start, and its end is the track position
+            x: control.progressInsetOverride
+            width: Math.max(0, control.visualPosition * parent.width - control.progressInsetOverride)
             visible: !Player.hasChapters
-            color: theme.fg.primary
-            height: control.barHeight
-            radius: control._seekPointsRadius
+            color: control.progressColorOverride.a > 0 ? control.progressColorOverride : theme.fg.primary
+            y: control.progressInsetOverride
+            height: control.barHeight - 2 * control.progressInsetOverride
+            radius: control.progressRadiusOverride >= 0 ? control.progressRadiusOverride : control._seekPointsRadius
 
             // We use dynamic mutability group because time interpolation
             // may induce rapid change:
@@ -457,6 +484,7 @@ T.ProgressBar {
             property bool buffering: Player.buffering > 0 && Player.buffering < 1
 
             height: control.barHeight
+            visible: control.bufferVisible
             opacity: 0.4
             color: theme.fg.neutral //FIXME buffer color ?
             radius: control.barHeight
@@ -510,9 +538,10 @@ T.ProgressBar {
                     PropertyChanges {
                         target: bufferRect
                         width: bufferAnimWidth
-                        visible: true
+                        // The state must not override bufferVisible: the Figma control bar has no buffer indicator
+                        visible: control.bufferVisible
                         x: (bufferAnimPosition / bufferFrames) * (parent.width - bufferAnimWidth)
-                        animateLoading: true
+                        animateLoading: control.bufferVisible
                     }
                 },
                 State {
@@ -521,7 +550,7 @@ T.ProgressBar {
                     PropertyChanges {
                         target: bufferRect
                         width: Player.buffering * parent.width
-                        visible: true
+                        visible: control.bufferVisible
                         x: 0
                         animateLoading: false
                     }
@@ -569,14 +598,20 @@ T.ProgressBar {
         id: sliderHandle
 
         property int _size: control.barHeight * 3
+        // Base handle size: the override when set (control bar), otherwise the default size
+        readonly property real _baseWidth: control.handleWidthOverride > 0 ? control.handleWidthOverride : _size
+        readonly property real _baseHeight: control.handleHeightOverride > 0 ? control.handleHeightOverride : _size
 
-        x: (control.visualPosition * control.availableWidth) - width / 2
+        // Figma control bar: the handle's right edge sits on the played end; the default handle is centred on it
+        x: control.handleWidthOverride > 0
+           ? Math.max(0, Math.min(control.visualPosition * control.availableWidth - width, control.availableWidth - width))
+           : (control.visualPosition * control.availableWidth) - width / 2
         y: (control.barHeight - height) / 2
 
-        implicitWidth: sliderHandle._size
-        implicitHeight: sliderHandle._size
-        radius: VLCStyle.margin_small
-        color: theme.fg.primary
+        implicitWidth: sliderHandle._baseWidth
+        implicitHeight: sliderHandle._baseHeight
+        radius: control.handleRadiusOverride >= 0 ? control.handleRadiusOverride : VLCStyle.margin_small
+        color: control.handleColorOverride.a > 0 ? control.handleColorOverride : theme.fg.primary
 
         // We use dynamic mutability group because time interpolation
         // may induce rapid change:
@@ -605,10 +640,17 @@ T.ProgressBar {
                 to: "visible"
                 SequentialAnimation {
                     PropertyAction { target: sliderHandle; property: "visible"; value: true; }
-                    NumberAnimation {
-                        target: sliderHandle; properties: "implicitWidth,implicitHeight"
-                        to: sliderHandle._size
-                        duration: VLCStyle.duration_short; easing.type: Easing.InSine
+                    ParallelAnimation {
+                        NumberAnimation {
+                            target: sliderHandle; property: "implicitWidth"
+                            to: sliderHandle._baseWidth
+                            duration: VLCStyle.duration_short; easing.type: Easing.InSine
+                        }
+                        NumberAnimation {
+                            target: sliderHandle; property: "implicitHeight"
+                            to: sliderHandle._baseHeight
+                            duration: VLCStyle.duration_short; easing.type: Easing.InSine
+                        }
                     }
                 }
             },
@@ -616,16 +658,25 @@ T.ProgressBar {
                 to: "visibleLarge"
                 SequentialAnimation {
                     PropertyAction { target: sliderHandle; property: "visible"; value: true; }
-                    NumberAnimation {
-                        target: sliderHandle; properties: "implicitWidth,implicitHeight"
-                        to: sliderHandle._size * (0.8 * control._hoveredScalingFactor)
-                        duration: VLCStyle.duration_short; easing.type: Easing.InSine
+                    ParallelAnimation {
+                        NumberAnimation {
+                            target: sliderHandle; property: "implicitWidth"
+                            to: sliderHandle._baseWidth * control.largeHandleFactor
+                            duration: VLCStyle.duration_short; easing.type: Easing.InSine
+                        }
+                        NumberAnimation {
+                            target: sliderHandle; property: "implicitHeight"
+                            to: sliderHandle._baseHeight * control.largeHandleFactor
+                            duration: VLCStyle.duration_short; easing.type: Easing.InSine
+                        }
                     }
                 }
             }
         ]
 
-        state: (hoverHandler.hovered || control.visualFocus)
+        // Stay visible while the pointer is over the control or a drag is active, so the handle
+        // does not vanish when the drag stops and the hover state has not caught up yet.
+        state: (control.handleAlwaysVisible || hoverHandler.hovered || control.hovered || control.visualFocus || dragHandler.active)
                ? ((control._currentChapterHovered || (Player.hasChapters && fsm._state === fsm.fsmHeld)) ? "visibleLarge" : "visible")
                : "hidden"
     }
