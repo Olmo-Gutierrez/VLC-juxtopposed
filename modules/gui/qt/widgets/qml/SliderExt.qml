@@ -51,6 +51,11 @@ T.Slider {
     // else tooltip will always be shown at current value.
     property bool toolTipFollowsMouse: false
 
+    // false when the control shows its value another way (Figma audio value)
+    property bool toolTipVisible: true
+
+    readonly property bool pointerOver: hoverHandler.hovered
+
     // toolTipTextProvider -> function(value)
     // arg "value" is between from and to, this is "value"
     // at which pointing tool tip is currently shown
@@ -137,7 +142,7 @@ T.Slider {
     }
 
     Widgets.PointingToolTipAttached.pos: Qt.point(control._tooltipX, control.handle.height / 2)
-    Widgets.PointingToolTipAttached.visible: (hoverHandler.hovered || control.visualFocus || control.pressed)
+    Widgets.PointingToolTipAttached.visible: control.toolTipVisible && (hoverHandler.hovered || control.visualFocus || control.pressed)
     Widgets.PointingToolTipAttached.text: {
         if (!Widgets.PointingToolTipAttached.instance?.visible)
             return ""

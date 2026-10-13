@@ -233,6 +233,39 @@ T.Pane {
                 return Math.round(Player.volume * 100) + "%"
             }
 
+            // Figma volume: the stock tooltip is replaced by the 'audio value' box (121 x 37) above the cone
+            toolTipVisible: false
+
+            Rectangle {
+                id: audioValue
+
+                FontLoader {
+                    id: audioValueFont
+                    source: "qrc:/Inter-Regular.ttf"
+                }
+
+                anchors.horizontalCenter: parent.horizontalCenter
+                y: -height - VLCStyle.dp(8, VLCStyle.scale)
+                width: VLCStyle.dp(121, VLCStyle.scale)
+                height: VLCStyle.dp(37, VLCStyle.scale)
+                radius: VLCStyle.dp(6, VLCStyle.scale)
+                // Figma 'audio value': #0E0E0E at 95 %
+                color: "#F20E0E0E"
+                z: 1
+
+                visible: volControl.pointerOver || volControl.visualFocus || volControl.pressed
+
+                // Figma: Inter Regular 14 px, the number #969696 and the % sign #6B6B6B
+                Text {
+                    anchors.centerIn: parent
+                    textFormat: Text.RichText
+                    text: "<font color=\"#969696\">" + Math.round(Player.volume * 100) + " </font>"
+                          + "<font color=\"#6B6B6B\">%</font>"
+                    font.family: audioValueFont.name
+                    font.pixelSize: 14
+                }
+            }
+
             Accessible.name: qsTr("Volume")
             AccessibleCompat.id: "volumeSlider"
 
