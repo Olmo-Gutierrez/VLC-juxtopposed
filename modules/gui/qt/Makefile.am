@@ -791,6 +791,7 @@ ui_%.h: %.ui
 
 libqt_plugin_la_RES = \
 	pixmaps/VLCIcons.ttf \
+	pixmaps/Inter-Regular.ttf \
 	pixmaps/addons/addon_default.svg \
 	pixmaps/addons/addon_broken.svg \
 	pixmaps/addons/addon_blue.svg \

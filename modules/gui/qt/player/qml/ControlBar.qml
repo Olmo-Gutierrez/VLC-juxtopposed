@@ -98,6 +98,26 @@ T.Pane {
             menu.close()
     }
 
+    // The Figma time labels (Inter 15 px, always HH:MM:SS) are for the single-row bar only. The mini player
+    // and the other positions keep the original font, format and width measurement.
+    readonly property bool _figmaTimes: textPosition === ControlBar.TimeTextPosition.Inline
+
+    // Figma Controls bar: times are always HH:MM:SS, also below one hour
+    function formatTime(time) {
+        // An invalid time (no media, or not reported yet) must not turn into a huge number of hours
+        if (!time.valid())
+            return "00:00:00"
+        const seconds = Math.max(0, time.toSeconds())
+        const pad = (n) => (n < 10 ? "0" : "") + n
+        return pad(Math.floor(seconds / 3600)) + ":" + pad(Math.floor(seconds % 3600 / 60)) + ":" + pad(seconds % 60)
+    }
+
+    // Figma Controls bar: Inter Regular 15 px for the time labels
+    FontLoader {
+        id: interFont
+        source: "qrc:/Inter-Regular.ttf"
+    }
+
     readonly property ColorContext colorContext: ColorContext {
         id: theme
         colorSet: ColorContext.Window
@@ -105,11 +125,17 @@ T.Pane {
 
     TextMetrics {
         id: timeTextMetrics
-        font.pixelSize: (textPosition === ControlBar.TimeTextPosition.LeftRightSlider) ? VLCStyle.fontSize_small
-                                                                                       : VLCStyle.fontSize_normal
+        font.family: root._figmaTimes ? interFont.name : Qt.application.font.family
+        font.pixelSize: root._figmaTimes ? 15
+                                         : (textPosition === ControlBar.TimeTextPosition.LeftRightSlider) ? VLCStyle.fontSize_small
+                                                                                                          : VLCStyle.fontSize_normal
         text: {
             // This text metrics is used for both the time and length, as we want them to have the same width.
             // Length might not be reported in some cases, for that reason we should check both and use the bigger one.
+
+            // The Figma labels always show the hours
+            if (root._figmaTimes)
+                return "00--00--00"
 
             // Some extra space to compensate non-monospaced fonts ("-" takes more space than ":", double "-" for guarantee)
             return (Player.time.isSubHour() && Player.length.isSubHour()) ? "00--00" : "00--00--00"
@@ -140,11 +166,9 @@ T.Pane {
                 Layout.preferredWidth: (textPosition === ControlBar.TimeTextPosition.Inline) ? VLCStyle.dp(76, VLCStyle.scale)
                                        : (textPosition === ControlBar.TimeTextPosition.LeftRightSlider) ? timeTextMetrics.width : -1
 
-                text: {
-                    const length = Player.length
-                    return Player.time.formatHMS(length.isSubSecond() ? VLCTick.SubSecondFormattedAsMS : 0)
-                }
-                color: theme.fg.primary
+                text: root._figmaTimes ? root.formatTime(Player.time)
+                                       : Player.time.formatHMS(Player.length.isSubSecond() ? VLCTick.SubSecondFormattedAsMS : 0)
+                color: "#8F8F8F"  // Figma Controls bar: time text grey
                 font: timeTextMetrics.font
                 horizontalAlignment: Text.AlignHCenter
 
@@ -169,9 +193,10 @@ T.Pane {
 
                 readonly property bool showRemainingTime: (MainCtx.showRemainingTime && Player.remainingTime.valid())
 
-                text: showRemainingTime
-                      ? "-" + Player.remainingTime.formatHMS()
-                      : Player.length.formatHMS()
+                text: root._figmaTimes ? (showRemainingTime ? "-" + root.formatTime(Player.remainingTime)
+                                                            : root.formatTime(Player.length))
+                                       : (showRemainingTime ? "-" + Player.remainingTime.formatHMS()
+                                                            : Player.length.formatHMS())
                 color: mediaTime.color
                 font: timeTextMetrics.font
                 horizontalAlignment: Text.AlignHCenter

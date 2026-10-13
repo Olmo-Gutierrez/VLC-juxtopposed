@@ -123,6 +123,7 @@
     </qresource>
     <qresource prefix="/">
         <file alias="VLCIcons.ttf">pixmaps/VLCIcons.ttf</file>
+        <file alias="Inter-Regular.ttf">pixmaps/Inter-Regular.ttf</file>
     </qresource>
     <qresource prefix="/prefsmenu">
         <file alias="advprefs_audio.svg">pixmaps/prefs/advprefs_audio.svg</file>
