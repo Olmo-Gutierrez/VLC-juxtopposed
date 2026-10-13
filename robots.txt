@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://olmo-gutierrez.github.io/VLC-juxtopposed/sitemap.xml

@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Juxtopposed VLC Redesign: unofficial VLC media player redesign</title>
+  <meta name="description" content="Unofficial, work-in-progress redesign of the VLC media player interface, built 1:1 from Juxtopposed's VLC redesign video and Figma file. Playback stays VLC.">
+  <link rel="canonical" href="https://olmo-gutierrez.github.io/VLC-juxtopposed/">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Juxtopposed VLC Redesign">
+  <meta property="og:description" content="Unofficial, work-in-progress redesign of the VLC media player interface, built 1:1 from Juxtopposed's VLC redesign video and Figma file. Playback stays VLC.">
+  <meta property="og:url" content="https://olmo-gutierrez.github.io/VLC-juxtopposed/">
+  <meta property="og:image" content="https://olmo-gutierrez.github.io/VLC-juxtopposed/player.png">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareSourceCode",
+    "name": "Juxtopposed VLC Redesign",
+    "description": "Unofficial, work-in-progress redesign of the VLC media player interface in VLC's Qt/QML interface, based on Juxtopposed's VLC redesign video and Figma file.",
+    "url": "https://olmo-gutierrez.github.io/VLC-juxtopposed/",
+    "codeRepository": "https://github.com/Olmo-Gutierrez/VLC-juxtopposed",
+    "programmingLanguage": ["C++", "QML"],
+    "license": "https://spdx.org/licenses/GPL-2.0-or-later.html",
+    "isBasedOn": "https://code.videolan.org/videolan/vlc"
+  }
+  </script>
+
+  <style>
+    :root { color-scheme: light dark; }
+    body { margin: 0; font: 16px/1.6 system-ui, -apple-system, "Segoe UI", sans-serif; }
+    main, footer { max-width: 760px; margin: 0 auto; padding: 0 1.25rem; }
+    main { padding-top: 2rem; }
+    footer { padding-top: 2rem; padding-bottom: 2rem; font-size: 0.9rem; opacity: 0.8; }
+    h1 { line-height: 1.2; }
+    img { display: block; max-width: 100%; height: auto; border-radius: 8px; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Juxtopposed VLC Redesign</h1>
+
+    <p>An unofficial, work-in-progress redesign of the <strong>VLC media player</strong> interface, built 1:1 in VLC's
+      own Qt/QML interface. The design comes from Juxtopposed's video
+      <a href="https://www.youtube.com/watch?v=ERFeOgqk324"><em>I Redesigned VLC After 25 Years</em></a> and its Figma
+      file. Playback, codecs and everything else stay VLC.</p>
+
+    <p><a href="https://github.com/Olmo-Gutierrez/VLC-juxtopposed">Source code and build instructions on GitHub</a></p>
+
+    <img src="player.png" width="1600" height="860"
+      alt="The redesigned VLC player: windowed video in a dark rounded frame with the new bottom control bar">
+
+    <h2>Status</h2>
+    <p>The bottom control bar is built. The rest of the interface still looks like stock VLC.</p>
+
+    <h2>Roadmap</h2>
+    <ul>
+      <li>Top navigation bar and window controls</li>
+      <li>Quick audio and subtitle popovers, and the enhanced subtitle loader</li>
+      <li>Quick settings sidebar</li>
+      <li>Media library, music mode and stream manager</li>
+      <li>Settings overhaul and onboarding</li>
+    </ul>
+    <p>The full checklist is in the <a href="https://github.com/Olmo-Gutierrez/VLC-juxtopposed#roadmap">repository
+      README</a>.</p>
+
+    <h2>FAQ</h2>
+
+    <h3>Is there a download?</h3>
+    <p>No. There is no prebuilt installer yet. Build it from source using the
+      <a href="https://github.com/Olmo-Gutierrez/VLC-juxtopposed#building-and-running">instructions in the
+      repository</a>. Installers offered on other sites are not from this project.</p>
+
+    <h3>Is this official?</h3>
+    <p>No. It is not affiliated with or endorsed by VideoLAN or Juxtopposed. For the official player, see
+      <a href="https://www.videolan.org/vlc/">videolan.org</a>.</p>
+
+    <h3>Who designed it?</h3>
+    <p>Juxtopposed (spelled with two p's, not "juxtaposed"), in the video linked above. The layouts, sizes, colours and
+      icons come from the community Figma file "VLC Redesign" shown in that video.</p>
+
+    <h3>Does it change playback?</h3>
+    <p>No. Only the look and the interface change.</p>
+
+    <h3>Does it have skins or themes?</h3>
+    <p>No. It changes VLC's built-in Qt interface. It is not a skin or theme pack.</p>
+
+    <h2>Links</h2>
+    <ul>
+      <li><a href="https://github.com/Olmo-Gutierrez/VLC-juxtopposed">GitHub repository</a></li>
+      <li><a href="https://www.youtube.com/watch?v=ERFeOgqk324">Juxtopposed: <em>I Redesigned VLC After 25 Years</em></a></li>
+      <li><a href="https://www.videolan.org/vlc/">Official VLC media player</a></li>
+    </ul>
+  </main>
+
+  <footer>
+    <p>This project is not affiliated with or endorsed by VideoLAN or Juxtopposed. VLC is released under GPLv2 or later;
+      this redesign is released under the same licences.</p>
+  </footer>
+</body>
+</html>
