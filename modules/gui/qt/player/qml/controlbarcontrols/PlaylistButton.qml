@@ -27,6 +27,11 @@ import VLC.Util
 Widgets.IconToolButton {
     id: playlistBtn
 
+    // Figma Controls bar: 30 px slot = 24 px glyph + 3 px padding each side. Padding (not a wider
+    // implicitWidth) keeps the glyph at 24 px, so it is not stretched
+    leftPadding: VLCStyle.dp(3, VLCStyle.scale)
+    rightPadding: VLCStyle.dp(3, VLCStyle.scale)
+
     text: VLCIcons.playlist
 
     // Redesign: queue icon (three lines with dot bullets) instead of the playlist glyph.

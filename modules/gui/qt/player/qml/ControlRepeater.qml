@@ -19,6 +19,7 @@ import QtQuick
 import QtQuick.Layouts
 
 import VLC.MainInterface
+import VLC.Style
 
 Repeater {
     id: repeater
@@ -63,6 +64,9 @@ Repeater {
         Layout.fillHeight: true
 
         Layout.alignment: repeater.alignment
+
+        // Extra space after the control (gapAfter in PlayerControlbarControls, 0 when unset), on top of the row spacing
+        Layout.rightMargin: VLCStyle.dp(PlayerControlbarControls.control(model.id).gapAfter ?? 0, VLCStyle.scale)
 
         Binding on visible {
             delayed: true // this is important

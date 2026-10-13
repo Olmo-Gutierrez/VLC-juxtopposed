@@ -32,9 +32,16 @@ FocusScope {
 
     property real spacing: VLCStyle.margin_normal // spacing between controls
 
+    // Margins of the centre items from the left and right sections (they follow the spacing unless set)
+    property real centerLeftMargin: spacing
+    property real centerRightMargin: spacing
+
     property real layoutSpacing: VLCStyle.margin_xxlarge // spacing between layouts (left, center, and right)
 
     property int identifier: -1
+
+    // Items placed between the left and right sections (redesign: time labels and seek track)
+    property var centerItems: []
 
     readonly property PlayerControlbarModel model: {
         if (!!MainCtx.controlbarProfileModel.currentModel)
@@ -133,7 +140,21 @@ FocusScope {
                                                                                                                : 0
 
                 Layout.fillWidth: true
-                visible: true
+                visible: playerControlLayout.centerItems.length === 0
+            }
+
+            RowLayout {
+                id: centerRow
+
+                visible: playerControlLayout.centerItems.length > 0
+                spacing: playerControlLayout.spacing
+
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                Layout.leftMargin: playerControlLayout.centerLeftMargin
+                Layout.rightMargin: playerControlLayout.centerRightMargin
+
+                children: playerControlLayout.centerItems
             }
 
             ControlRepeater {

@@ -26,6 +26,11 @@ import VLC.Util
 Widgets.IconToolButton {
     id: prevBtn
 
+    // Figma Controls bar: 30 px slot = 24 px glyph + 3 px padding each side. Padding (not a wider
+    // implicitWidth) keeps the glyph at 24 px, so it is not stretched
+    leftPadding: VLCStyle.dp(3, VLCStyle.scale)
+    rightPadding: VLCStyle.dp(3, VLCStyle.scale)
+
     text: VLCIcons.previous
 
     // Figma transport glyph (filled, no box); dimmed when disabled

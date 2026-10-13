@@ -111,7 +111,7 @@ T.Pane {
             id: volControl
 
             // FIXME: use VLCStyle
-            implicitWidth: VLCStyle.dp(100, VLCStyle.scale)
+            implicitWidth: VLCStyle.dp(88, VLCStyle.scale)
 
             // WARNING: Directly setting the insets break handle and background positioning.
             Binding on topInset {
@@ -124,7 +124,8 @@ T.Pane {
             }
 
             Layout.fillHeight: true
-            Layout.margins: VLCStyle.margin_xsmall
+            // Figma volume group: 8 px between the 24 px icon and the 88 px cone, no space after
+            Layout.leftMargin: VLCStyle.margin_xsmall
 
             property bool _inhibitPlayerVolumeUpdate: false
 

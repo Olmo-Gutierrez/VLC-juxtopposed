@@ -34,13 +34,17 @@ T.Pane {
     enum TimeTextPosition {
         Hide,
         AboveSlider,
-        LeftRightSlider
+        LeftRightSlider,
+        // Redesign: one row - transport, elapsed time, seek track, remaining time, utilities
+        Inline
     }
 
     implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset,
                             implicitContentWidth + leftPadding + rightPadding)
-    implicitHeight: Math.max(implicitBackgroundHeight + bottomInset,
-                             implicitContentHeight + topPadding + bottomPadding)
+    // Figma Controls bar: the Inline bar is exactly 54 px high, with no extra space below the content
+    implicitHeight: (textPosition === ControlBar.TimeTextPosition.Inline) ? VLCStyle.controlLayoutHeight
+                                                                          : Math.max(implicitBackgroundHeight + bottomInset,
+                                                                                     implicitContentHeight + topPadding + bottomPadding)
 
     topInset: sliderY
 
@@ -112,14 +116,15 @@ T.Pane {
         }
     }
 
+    // Figma Controls bar: fixed dark background #1B1B1B (independent of the light/dark theme)
     background: Rectangle {
-        color: theme.bg.primary
+        color: "#1B1B1B"
     }
 
     contentItem: ColumnLayout {
         spacing: VLCStyle.margin_xsmall
 
-        readonly property real sliderY: row2.y
+        readonly property real sliderY: row2.visible ? row2.y : playerControlLayout.y
 
         property alias trackPositionSlider: trackPositionSlider
 
@@ -131,7 +136,9 @@ T.Pane {
             T.Label {
                 id: mediaTime
 
-                Layout.preferredWidth: (textPosition === ControlBar.TimeTextPosition.LeftRightSlider) ? timeTextMetrics.width : -1
+                // Figma Controls bar: the Inline time boxes are 76 px wide
+                Layout.preferredWidth: (textPosition === ControlBar.TimeTextPosition.Inline) ? VLCStyle.dp(76, VLCStyle.scale)
+                                       : (textPosition === ControlBar.TimeTextPosition.LeftRightSlider) ? timeTextMetrics.width : -1
 
                 text: {
                     const length = Player.length
@@ -156,7 +163,9 @@ T.Pane {
             T.Label {
                 id: mediaRemainingTime
 
-                Layout.preferredWidth: (textPosition === ControlBar.TimeTextPosition.LeftRightSlider) ? timeTextMetrics.width : -1
+                // Figma Controls bar: the Inline time boxes are 76 px wide
+                Layout.preferredWidth: (textPosition === ControlBar.TimeTextPosition.Inline) ? VLCStyle.dp(76, VLCStyle.scale)
+                                       : (textPosition === ControlBar.TimeTextPosition.LeftRightSlider) ? timeTextMetrics.width : -1
 
                 readonly property bool showRemainingTime: (MainCtx.showRemainingTime && Player.remainingTime.valid())
 
@@ -241,7 +250,8 @@ T.Pane {
                 id: bookmarksLoader
 
                 parent: root
-                active: MainCtx.mediaLibraryAvailable
+                // Bookmark marks are laid out under a separate slider row; not shown in the inline layout
+                active: MainCtx.mediaLibraryAvailable && root.textPosition !== ControlBar.TimeTextPosition.Inline
                 source: "qrc:///qt/qml/VLC/MediaLibrary/Bookmarks.qml"
 
                 x: root.leftPadding + trackPositionSlider.x + row2.Layout.leftMargin
@@ -316,13 +326,25 @@ T.Pane {
 
             Layout.fillWidth: true
             Layout.fillHeight: true
-            Layout.leftMargin: VLCStyle.margin_large
-            Layout.rightMargin: VLCStyle.margin_large
+            // Figma Controls bar (Inline): 20 px edges, 8 px between controls, 54 px high, pinned or not
+            readonly property bool figmaBar: root.textPosition === ControlBar.TimeTextPosition.Inline
+
+            Layout.leftMargin: figmaBar ? VLCStyle.dp(20, VLCStyle.scale) : VLCStyle.margin_large
+            Layout.rightMargin: figmaBar ? VLCStyle.dp(20, VLCStyle.scale) : VLCStyle.margin_large
 
             identifier: root.identifier
 
-            implicitHeight: MainCtx.pinVideoControls ? VLCStyle.controlLayoutHeightPinned
-                                                     : VLCStyle.controlLayoutHeight
+            spacing: figmaBar ? VLCStyle.margin_xsmall : VLCStyle.margin_normal
+            // Inline: 8 px row spacing + 12 px margin = 20 px between the transport and the time, and the same on the right
+            centerLeftMargin: figmaBar ? VLCStyle.dp(12, VLCStyle.scale) : spacing
+            centerRightMargin: figmaBar ? VLCStyle.dp(12, VLCStyle.scale) : spacing
+
+            centerItems: (root.textPosition === ControlBar.TimeTextPosition.Inline)
+                         ? [mediaTime, trackPositionSlider, mediaRemainingTime]
+                         : []
+
+            implicitHeight: (MainCtx.pinVideoControls && !figmaBar) ? VLCStyle.controlLayoutHeightPinned
+                                                                    : VLCStyle.controlLayoutHeight
 
             visible: !model?.empty ?? false
 
