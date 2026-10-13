@@ -403,4 +403,54 @@ T.Pane {
             }
         }
     }
+
+    // Figma seek preview ('thumbnail', 272 x 189): the frame and the time under the pointer, above the seek bar
+    // Declared in the content layout by default, which would stack it as a row: the parent is the
+    // control itself, so the layout does not manage it
+    Rectangle {
+        id: seekPreview
+
+        parent: root
+        readonly property bool active: root._figmaTimes && trackPositionSlider.pointerOver
+                                       && Player.seekable && Player.length.valid()
+        readonly property real pointerX: trackPositionSlider.mapToItem(root, trackPositionSlider.pointerPosition * trackPositionSlider.width, 0).x
+
+        visible: active
+        z: 1
+
+        width: VLCStyle.dp(272, VLCStyle.scale)
+        height: VLCStyle.dp(189, VLCStyle.scale)
+        radius: VLCStyle.dp(14, VLCStyle.scale)
+        // Figma 'thumbnail': #171717 at 95 % (the blur of the Figma effect is not drawn)
+        color: "#F2171717"
+
+        x: Math.max(0, Math.min(seekPreview.pointerX - width / 2, root.width - width))
+        y: trackPositionSlider.mapToItem(root, 0, 0).y - height - VLCStyle.dp(8, VLCStyle.scale)
+
+        Image {
+            x: VLCStyle.dp(10, VLCStyle.scale)
+            y: VLCStyle.dp(10, VLCStyle.scale)
+            width: VLCStyle.dp(252, VLCStyle.scale)
+            height: VLCStyle.dp(142, VLCStyle.scale)
+            fillMode: Image.PreserveAspectCrop
+            source: Player.seekThumbnail
+        }
+
+        Text {
+            x: (parent.width - width) / 2
+            y: VLCStyle.dp(162, VLCStyle.scale)
+            text: root.formatTime(Player.length.scale(trackPositionSlider.pointerPosition))
+            color: "#8F8F8F"
+            font.family: interFont.name
+            font.pixelSize: 15
+        }
+    }
+
+    Connections {
+        target: trackPositionSlider
+        enabled: seekPreview.active
+
+        function onPointerPositionChanged() { Player.requestSeekThumbnail(trackPositionSlider.pointerPosition) }
+        function onPointerOverChanged() { if (trackPositionSlider.pointerOver) Player.requestSeekThumbnail(trackPositionSlider.pointerPosition) }
+    }
 }

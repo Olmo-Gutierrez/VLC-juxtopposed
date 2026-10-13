@@ -46,6 +46,9 @@ T.ProgressBar {
     property bool bufferVisible: true
     // Figma control bar: no time tooltip while hovering or dragging
     property bool toolTipVisible: true
+    // Pointer over the bar, and its position as a fraction of the width (seek preview)
+    readonly property bool pointerOver: hoverHandler.hovered
+    readonly property real pointerPosition: width > 0 ? Helpers.clamp(hoverHandler.point.position.x / width, 0., 1.) : 0.
     // Figma control bar geometry: track and played corner radius, and the played vertical inset
     property real trackRadiusOverride: -1
     property real progressRadiusOverride: -1
