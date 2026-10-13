@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Juxtopposed VLC Redesign: unofficial VLC media player redesign</title>
   <meta name="description" content="Unofficial, work-in-progress redesign of the VLC media player interface, built 1:1 from Juxtopposed's VLC redesign video and Figma file. Playback stays VLC.">
+  <meta name="theme-color" content="#111111" media="(prefers-color-scheme: dark)">
+  <meta name="theme-color" content="#f7f6f4" media="(prefers-color-scheme: light)">
   <link rel="canonical" href="https://olmo-gutierrez.github.io/VLC-juxtopposed/">
 
   <meta property="og:type" content="website">
@@ -29,75 +31,266 @@
   </script>
 
   <style>
-    :root { color-scheme: light dark; }
-    body { margin: 0; font: 16px/1.6 system-ui, -apple-system, "Segoe UI", sans-serif; }
-    main, footer { max-width: 760px; margin: 0 auto; padding: 0 1.25rem; }
-    main { padding-top: 2rem; }
-    footer { padding-top: 2rem; padding-bottom: 2rem; font-size: 0.9rem; opacity: 0.8; }
-    h1 { line-height: 1.2; }
-    img { display: block; max-width: 100%; height: auto; border-radius: 8px; }
+    :root {
+      color-scheme: light dark;
+      --bg: #f7f6f4;
+      --surface: #ffffff;
+      --text: #171717;
+      --muted: #5b5b5b;
+      --line: #e2dfda;
+      --accent: #b35a0c;
+      --accent-text: #ffffff;
+      --radius: 14px;
+      --shadow: 0 1px 2px rgb(0 0 0 / 6%), 0 12px 32px rgb(0 0 0 / 8%);
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #111111;
+        --surface: #1b1b1b;
+        --text: #f2f2f2;
+        --muted: #a6a6a6;
+        --line: #2d2d2d;
+        --accent: #e8893a;
+        --accent-text: #111111;
+        --shadow: 0 1px 2px rgb(0 0 0 / 40%), 0 12px 32px rgb(0 0 0 / 35%);
+      }
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; scroll-padding-top: 4.5rem; }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--text);
+      font: 16px/1.65 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: var(--accent); text-underline-offset: 3px; }
+    a:focus-visible, summary:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+    .wrap { width: min(1040px, 100% - 2.5rem); margin-inline: auto; }
+
+    .skip { position: absolute; left: -9999px; }
+    .skip:focus { left: 1rem; top: 1rem; z-index: 20; background: var(--surface); padding: .5rem .8rem; border-radius: 8px; }
+
+    .site-header {
+      position: sticky; top: 0; z-index: 10;
+      background: var(--bg);
+      border-bottom: 1px solid var(--line);
+    }
+    .site-header .wrap {
+      display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
+      gap: .5rem 1rem; min-height: 3.5rem;
+    }
+    .brand { font-weight: 700; color: var(--text); text-decoration: none; }
+    .site-header nav ul { display: flex; flex-wrap: wrap; gap: .4rem 1.25rem; list-style: none; margin: 0; padding: 0; }
+    .site-header nav a { color: var(--muted); text-decoration: none; font-size: .95rem; }
+    .site-header nav a:hover { color: var(--text); }
+
+    .hero { padding: clamp(3rem, 8vw, 5.5rem) 0 2.5rem; }
+    .eyebrow {
+      display: inline-block; margin: 0 0 1rem; padding: .25rem .7rem; border-radius: 999px;
+      border: 1px solid var(--line); color: var(--muted); font-size: .8rem; font-weight: 600;
+      letter-spacing: .06em; text-transform: uppercase;
+    }
+    h1 {
+      margin: 0 0 1rem; max-width: 18ch;
+      font-size: clamp(2.2rem, 6vw, 3.6rem); line-height: 1.05; letter-spacing: -.02em;
+    }
+    .lede { margin: 0 0 2rem; max-width: 60ch; color: var(--muted); font-size: clamp(1.05rem, 2vw, 1.2rem); }
+    .actions { display: flex; flex-wrap: wrap; gap: .75rem; }
+    .button {
+      display: inline-block; padding: .7rem 1.25rem; border-radius: 999px; border: 1px solid var(--accent);
+      font-weight: 600; text-decoration: none;
+    }
+    .button.primary { background: var(--accent); color: var(--accent-text); }
+    .button.secondary { background: transparent; color: var(--accent); }
+
+    .shot { margin: 0 0 1rem; }
+    .shot img {
+      display: block; width: 100%; height: auto; border-radius: var(--radius);
+      border: 1px solid var(--line); box-shadow: var(--shadow);
+    }
+    figcaption { margin-top: .75rem; color: var(--muted); font-size: .9rem; }
+
+    section { padding: 2.75rem 0; border-top: 1px solid var(--line); }
+    h2 { margin: 0 0 1.25rem; font-size: 1.6rem; letter-spacing: -.01em; }
+    h3 { font-size: 1.05rem; }
+
+    .cards {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem;
+      list-style: none; margin: 0; padding: 0;
+    }
+    .cards li {
+      padding: 1.25rem; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface);
+    }
+    .cards h3 { margin: 0 0 .4rem; }
+    .cards p { margin: 0; color: var(--muted); font-size: .95rem; }
+    .note { margin: 1.25rem 0 0; color: var(--muted); font-size: .95rem; }
+
+    .roadmap { list-style: none; margin: 0; padding: 0; }
+    .roadmap li {
+      display: flex; flex-wrap: wrap; justify-content: space-between; align-items: baseline; gap: .4rem 1rem;
+      padding: .9rem 0; border-bottom: 1px solid var(--line);
+    }
+    .status {
+      padding: .2rem .65rem; border: 1px solid var(--line); border-radius: 999px;
+      color: var(--muted); font-size: .8rem; font-weight: 600; white-space: nowrap;
+    }
+    .status.progress { border-color: var(--accent); color: var(--accent); }
+
+    details {
+      margin-bottom: .6rem; padding: .9rem 1.1rem; border: 1px solid var(--line); border-radius: 10px;
+      background: var(--surface);
+    }
+    summary { cursor: pointer; font-weight: 600; }
+    details p { margin: .6rem 0 0; color: var(--muted); }
+
+    .links { list-style: none; margin: 0; padding: 0; display: grid; gap: .6rem; }
+    .links a { font-weight: 600; }
+
+    footer { padding: 2rem 0 3rem; border-top: 1px solid var(--line); color: var(--muted); font-size: .9rem; }
   </style>
 </head>
-<body>
-  <main>
-    <h1>Juxtopposed VLC Redesign</h1>
+<body id="top">
+  <a class="skip" href="#main">Skip to content</a>
 
-    <p>An unofficial, work-in-progress redesign of the <strong>VLC media player</strong> interface, built 1:1 in VLC's
-      own Qt/QML interface. The design comes from Juxtopposed's video
-      <a href="https://www.youtube.com/watch?v=ERFeOgqk324"><em>I Redesigned VLC After 25 Years</em></a> and its Figma
-      file. Playback, codecs and everything else stay VLC.</p>
+  <header class="site-header">
+    <div class="wrap">
+      <a class="brand" href="#top">Juxtopposed VLC Redesign</a>
+      <nav aria-label="Page sections">
+        <ul>
+          <li><a href="#progress">Progress</a></li>
+          <li><a href="#roadmap">Roadmap</a></li>
+          <li><a href="#faq">FAQ</a></li>
+          <li><a href="#links">Links</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
 
-    <p><a href="https://github.com/Olmo-Gutierrez/VLC-juxtopposed">Source code and build instructions on GitHub</a></p>
+  <main id="main">
+    <div class="wrap">
+      <div class="hero">
+        <p class="eyebrow">Unofficial &middot; Work in progress</p>
+        <h1>Juxtopposed VLC Redesign</h1>
+        <p class="lede">The VLC media player interface, rebuilt in VLC's own Qt/QML to match the Figma design from
+          Juxtopposed's video. Playback, codecs and everything else stay VLC.</p>
+        <div class="actions">
+          <a class="button primary" href="https://github.com/Olmo-Gutierrez/VLC-juxtopposed">View the source on GitHub</a>
+          <a class="button secondary" href="https://www.youtube.com/watch?v=ERFeOgqk324">Watch the video</a>
+        </div>
+      </div>
 
-    <img src="player.png" width="1600" height="860"
-      alt="The redesigned VLC player: windowed video in a dark rounded frame with the new bottom control bar">
+      <figure class="shot">
+        <img src="player.png" width="1600" height="860"
+          alt="The redesigned VLC player: windowed video in a dark rounded frame with the new bottom control bar">
+        <figcaption>Windowed player with pinned controls, playing a generated test clip. The top bar is still stock VLC.</figcaption>
+      </figure>
+    </div>
 
-    <h2>Status</h2>
-    <p>The bottom control bar is built. The rest of the interface still looks like stock VLC.</p>
+    <section id="progress">
+      <div class="wrap">
+        <h2>What works today</h2>
+        <ul class="cards">
+          <li>
+            <h3>Control bar layout</h3>
+            <p>Previous, play and next, the seek bar, volume, audio, subtitles, settings and lists. Positions match
+              Figma within 1 to 2 px.</p>
+          </li>
+          <li>
+            <h3>Cone volume slider</h3>
+            <p>The Figma cone with its gradient fill. The end of the cone is VLC's maximum volume.</p>
+          </li>
+          <li>
+            <h3>Seek bar and preview</h3>
+            <p>The Figma track and handle. Dragging to the far left reaches 00:00:00, and hovering shows the frame and
+              time above the bar.</p>
+          </li>
+          <li>
+            <h3>Windowed video frame</h3>
+            <p>With pinned controls, the video sits in the dark rounded Figma frame.</p>
+          </li>
+          <li>
+            <h3>Icons and time labels</h3>
+            <p>The control bar uses the Figma icons, and all 206 are in the repository. Time labels use Inter 15 px in
+              HH:MM:SS.</p>
+          </li>
+        </ul>
+        <p class="note">The audio and subtitles buttons are placed but do nothing yet. They are part of Phase 4.</p>
+      </div>
+    </section>
 
-    <h2>Roadmap</h2>
-    <ul>
-      <li>Top navigation bar and window controls</li>
-      <li>Quick audio and subtitle popovers, and the enhanced subtitle loader</li>
-      <li>Quick settings sidebar</li>
-      <li>Media library, music mode and stream manager</li>
-      <li>Settings overhaul and onboarding</li>
-    </ul>
-    <p>The full checklist is in the <a href="https://github.com/Olmo-Gutierrez/VLC-juxtopposed#roadmap">repository
-      README</a>.</p>
+    <section id="roadmap">
+      <div class="wrap">
+        <h2>Roadmap</h2>
+        <ol class="roadmap">
+          <li><span>Phase 1: Design tokens and foundations</span><span class="status progress">In progress</span></li>
+          <li><span>Phase 2: Main playback controls and bottom bar</span><span class="status progress">In progress</span></li>
+          <li><span>Phase 3: Top navigation bar and window chrome</span><span class="status">Not started</span></li>
+          <li><span>Phase 4: Audio, subtitle and track management flyouts</span><span class="status">Not started</span></li>
+          <li><span>Phase 5: Quick settings sidebar</span><span class="status">Not started</span></li>
+          <li><span>Phase 6: Media library, music player and stream browser</span><span class="status">Not started</span></li>
+          <li><span>Phase 7: Settings overhaul and onboarding</span><span class="status">Not started</span></li>
+        </ol>
+        <p class="note">The full checklist is in the <a href="https://github.com/Olmo-Gutierrez/VLC-juxtopposed#roadmap">repository
+          README</a>.</p>
+      </div>
+    </section>
 
-    <h2>FAQ</h2>
+    <section id="faq">
+      <div class="wrap">
+        <h2>FAQ</h2>
+        <details>
+          <summary>Is there a download?</summary>
+          <p>No. There is no prebuilt installer yet. Build it from source using the
+            <a href="https://github.com/Olmo-Gutierrez/VLC-juxtopposed#building-and-running">instructions in the
+            repository</a>. Installers offered on other sites are not from this project.</p>
+        </details>
+        <details>
+          <summary>Is this official?</summary>
+          <p>No. It is not affiliated with or endorsed by VideoLAN or Juxtopposed. For the official player, see
+            <a href="https://www.videolan.org/vlc/">videolan.org</a>.</p>
+        </details>
+        <details>
+          <summary>Who designed it?</summary>
+          <p>Juxtopposed (spelled with two p's, not "juxtaposed"), in the video linked above. The layouts, sizes, colours
+            and icons come from the community Figma file "VLC Redesign" shown in that video.</p>
+        </details>
+        <details>
+          <summary>Does it change playback?</summary>
+          <p>No. Only the look and the interface change.</p>
+        </details>
+        <details>
+          <summary>Does it have skins or themes?</summary>
+          <p>No. It changes VLC's built-in Qt interface. It is not a skin or theme pack.</p>
+        </details>
+        <details>
+          <summary>Where are the icons and colours?</summary>
+          <p>The 206 Figma icons are in <a href="https://github.com/Olmo-Gutierrez/VLC-juxtopposed/tree/redesign/design/figma-icons">design/figma-icons</a>,
+            and the colour sheet is in <a href="https://github.com/Olmo-Gutierrez/VLC-juxtopposed/tree/redesign/design/palette">design/palette</a>.</p>
+        </details>
+      </div>
+    </section>
 
-    <h3>Is there a download?</h3>
-    <p>No. There is no prebuilt installer yet. Build it from source using the
-      <a href="https://github.com/Olmo-Gutierrez/VLC-juxtopposed#building-and-running">instructions in the
-      repository</a>. Installers offered on other sites are not from this project.</p>
-
-    <h3>Is this official?</h3>
-    <p>No. It is not affiliated with or endorsed by VideoLAN or Juxtopposed. For the official player, see
-      <a href="https://www.videolan.org/vlc/">videolan.org</a>.</p>
-
-    <h3>Who designed it?</h3>
-    <p>Juxtopposed (spelled with two p's, not "juxtaposed"), in the video linked above. The layouts, sizes, colours and
-      icons come from the community Figma file "VLC Redesign" shown in that video.</p>
-
-    <h3>Does it change playback?</h3>
-    <p>No. Only the look and the interface change.</p>
-
-    <h3>Does it have skins or themes?</h3>
-    <p>No. It changes VLC's built-in Qt interface. It is not a skin or theme pack.</p>
-
-    <h2>Links</h2>
-    <ul>
-      <li><a href="https://github.com/Olmo-Gutierrez/VLC-juxtopposed">GitHub repository</a></li>
-      <li><a href="https://www.youtube.com/watch?v=ERFeOgqk324">Juxtopposed: <em>I Redesigned VLC After 25 Years</em></a></li>
-      <li><a href="https://www.videolan.org/vlc/">Official VLC media player</a></li>
-    </ul>
+    <section id="links">
+      <div class="wrap">
+        <h2>Links</h2>
+        <ul class="links">
+          <li><a href="https://github.com/Olmo-Gutierrez/VLC-juxtopposed">GitHub repository</a></li>
+          <li><a href="https://www.youtube.com/watch?v=ERFeOgqk324">Juxtopposed: <em>I Redesigned VLC After 25 Years</em></a></li>
+          <li><a href="https://www.videolan.org/vlc/">Official VLC media player</a></li>
+        </ul>
+      </div>
+    </section>
   </main>
 
   <footer>
-    <p>This project is not affiliated with or endorsed by VideoLAN or Juxtopposed. VLC is released under GPLv2 or later;
-      this redesign is released under the same licences.</p>
+    <div class="wrap">
+      <p>This project is not affiliated with or endorsed by VideoLAN or Juxtopposed. VLC is released under GPLv2 or
+        later; this redesign is released under the same licences.</p>
+    </div>
   </footer>
 </body>
 </html>
