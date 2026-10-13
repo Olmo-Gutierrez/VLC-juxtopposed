@@ -17,6 +17,8 @@
         <file alias="bar_next.svg">pixmaps/icons/bar_next.svg</file>
         <file alias="bar_fullscreen.svg">pixmaps/icons/bar_fullscreen.svg</file>
         <file alias="bar_settings.svg">pixmaps/icons/bar_settings.svg</file>
+        <file alias="bar_play.svg">pixmaps/icons/bar_play.svg</file>
+        <file alias="bar_pause.svg">pixmaps/icons/bar_pause.svg</file>
         <file alias="bar_volume_high.svg">pixmaps/icons/bar_volume_high.svg</file>
         <file alias="bar_volume_medium.svg">pixmaps/icons/bar_volume_medium.svg</file>
         <file alias="bar_volume_low.svg">pixmaps/icons/bar_volume_low.svg</file>

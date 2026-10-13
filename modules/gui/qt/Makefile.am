@@ -810,6 +810,8 @@ libqt_plugin_la_RES = \
 	pixmaps/icons/bar_next.svg \
 	pixmaps/icons/bar_fullscreen.svg \
 	pixmaps/icons/bar_settings.svg \
+	pixmaps/icons/bar_play.svg \
+	pixmaps/icons/bar_pause.svg \
 	pixmaps/icons/bar_volume_high.svg \
 	pixmaps/icons/bar_volume_medium.svg \
 	pixmaps/icons/bar_volume_low.svg \

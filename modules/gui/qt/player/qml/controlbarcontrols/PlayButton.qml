@@ -47,6 +47,11 @@ T.Control {
 
     property bool _keyOkPressed: false
 
+    // Figma Controls bar: play and pause are separate components (orange and grey)
+    readonly property bool _playing: !paintOnly
+                                     && Player.playingState !== Player.PLAYING_STATE_PAUSED
+                                     && Player.playingState !== Player.PLAYING_STATE_STOPPED
+
     // Aliases
 
     property alias cursorInside: mouseArea.cursorInside
@@ -205,49 +210,16 @@ T.Control {
         }
     }
 
-    contentItem: T.Label {
-        text: {
-            const state = Player.playingState
-
-            if (!paintOnly
-                    && state !== Player.PLAYING_STATE_PAUSED
-                    && state !== Player.PLAYING_STATE_STOPPED)
-                return VLCIcons.pause_filled
-            else
-                return VLCIcons.play_filled
-        }
-
-        color: cursorInside ? theme.accent
-                            : "black"  //foreground is always black
-
-        font.pixelSize: Math.round(parent.height / 1.7)
-
-        font.family: VLCIcons.fontFamily
-
-        verticalAlignment: Text.AlignVCenter
-        horizontalAlignment: Text.AlignHCenter
-
-        Accessible.ignored: true
-
-        DelayedBehavior on color {
-            delayedEnabled: theme.initialized
-
-            ColorAnimation {
-                duration: VLCStyle.duration_veryShort
-                easing.type: Easing.InOutSine
-            }
-        }
-    }
-
     background: Item {
-        implicitWidth: height
-        implicitHeight: VLCStyle.icon_medium
+        // Figma Controls bar: wide rounded rectangle (54x28)
+        implicitWidth: VLCStyle.dp(54, VLCStyle.scale)
+        implicitHeight: VLCStyle.dp(28, VLCStyle.scale)
 
         Widgets.AnimatedBackground {
             anchors.fill: parent
             anchors.margins: -border.width * 4
 
-            radius: width / 2
+            radius: VLCStyle.dp(6, VLCStyle.scale)
             border.pixelAligned: false
 
             enabled: theme.initialized
@@ -258,11 +230,16 @@ T.Control {
         Rectangle {
             anchors.fill: parent
 
-            radius: width / 2
+            radius: VLCStyle.dp(6, VLCStyle.scale)
 
-            gradient: Gradient {
-                GradientStop { position: 0.0; color: "#e25b01" }
-                GradientStop { position: 1.0; color: "#f89a06" }
+            color: "transparent"
+
+            // Figma Controls bar: the play (orange) and pause (grey) components include their own
+            // rounded background and glyph, so they are drawn as one image
+            Image {
+                anchors.fill: parent
+
+                source: root._playing ? "qrc:/icons/bar_pause.svg" : "qrc:/icons/bar_play.svg"
             }
 
             Widgets.RoundedRectangleShadow {
@@ -280,13 +257,14 @@ T.Control {
             Rectangle {
                 id: innerRectangle
 
-                color: "white"
+                // Figma Controls bar: no white inner disc at rest; keep the press animation transparent
+                color: "transparent"
 
                 anchors.fill: parent
                 anchors.margins: _diminished ? (parent.width / 2)
                                              : VLCStyle.dp(2, VLCStyle.scale)
 
-                radius: width / 2
+                radius: VLCStyle.dp(6, VLCStyle.scale)
 
                 property bool _diminished: false
 
