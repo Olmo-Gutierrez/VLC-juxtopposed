@@ -897,6 +897,14 @@ libqt_plugin_la_RES = \
 	pixmaps/menu/add.svg \
 	pixmaps/menu/capture-card.svg \
 	pixmaps/menu/clear.svg \
+	pixmaps/menu/decorative/broadcast.svg \
+	pixmaps/menu/decorative/capture-card.svg \
+	pixmaps/menu/decorative/disc.svg \
+	pixmaps/menu/decorative/folder-open.svg \
+	pixmaps/menu/decorative/gear.svg \
+	pixmaps/menu/decorative/playlist.svg \
+	pixmaps/menu/decorative/save.svg \
+	pixmaps/menu/decorative/subtitles.svg \
 	pixmaps/menu/disc.svg \
 	pixmaps/menu/download.svg \
 	pixmaps/menu/ic_fluent_arrow_eject.svg \
