@@ -27,6 +27,17 @@ Widgets.IconToolButton {
     id: nextBtn
 
     text: VLCIcons.next
+
+    // Figma transport glyph (filled, no box); dimmed when disabled
+    contentItem: Image {
+        source: "qrc:/icons/bar_next.svg"
+        width: VLCStyle.dp(24, VLCStyle.scale)
+        height: VLCStyle.dp(24, VLCStyle.scale)
+        sourceSize.width: width
+        sourceSize.height: height
+        smooth: true
+        opacity: nextBtn.enabled ? 1.0 : 0.35
+    }
     enabled: MainPlaylistController.hasNext
     onClicked: MainPlaylistController.next()
     description: qsTr("Next")

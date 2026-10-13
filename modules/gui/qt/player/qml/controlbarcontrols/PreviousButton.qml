@@ -27,6 +27,17 @@ Widgets.IconToolButton {
     id: prevBtn
 
     text: VLCIcons.previous
+
+    // Figma transport glyph (filled, no box); dimmed when disabled
+    contentItem: Image {
+        source: "qrc:/icons/bar_previous.svg"
+        width: VLCStyle.dp(24, VLCStyle.scale)
+        height: VLCStyle.dp(24, VLCStyle.scale)
+        sourceSize.width: width
+        sourceSize.height: height
+        smooth: true
+        opacity: prevBtn.enabled ? 1.0 : 0.35
+    }
     enabled: MainPlaylistController.hasPrev
     onClicked: MainPlaylistController.prev()
     description: qsTr("Previous")

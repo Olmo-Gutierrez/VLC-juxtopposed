@@ -28,6 +28,16 @@ Widgets.IconToolButton {
 
     enabled: Player.hasVideoOutput
     text: Player.fullscreen ? VLCIcons.defullscreen :VLCIcons.fullscreen
+
+    // Figma bar glyph
+    contentItem: Image {
+        source: "qrc:/icons/bar_fullscreen.svg"
+        width: VLCStyle.dp(24, VLCStyle.scale)
+        height: VLCStyle.dp(24, VLCStyle.scale)
+        sourceSize.width: width
+        sourceSize.height: height
+        smooth: true
+    }
     onClicked: Player.fullscreen = !Player.fullscreen
     description: qsTr("fullscreen")
 

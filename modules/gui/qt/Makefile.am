@@ -805,6 +805,15 @@ libqt_plugin_la_RES = \
 	pixmaps/icons/ic_album_cover.svg \
 	pixmaps/icons/ic_aspect_ratio.svg \
 	pixmaps/icons/atob.svg \
+	pixmaps/icons/queue.svg \
+	pixmaps/icons/bar_previous.svg \
+	pixmaps/icons/bar_next.svg \
+	pixmaps/icons/bar_fullscreen.svg \
+	pixmaps/icons/bar_settings.svg \
+	pixmaps/icons/bar_volume_high.svg \
+	pixmaps/icons/bar_volume_medium.svg \
+	pixmaps/icons/bar_volume_low.svg \
+	pixmaps/icons/bar_volume_muted.svg \
 	pixmaps/icons/ic_audiosub.svg \
 	pixmaps/icons/back.svg \
 	pixmaps/icons/ic_fluent_bookmark.svg \

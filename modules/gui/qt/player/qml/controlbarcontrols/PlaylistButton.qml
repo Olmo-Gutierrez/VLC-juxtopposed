@@ -28,6 +28,17 @@ Widgets.IconToolButton {
     id: playlistBtn
 
     text: VLCIcons.playlist
+
+    // Redesign: queue icon (three lines with dot bullets) instead of the playlist glyph.
+    // The icon button only renders font glyphs, so this label is replaced by an image.
+    contentItem: Image {
+        source: "qrc:/icons/queue.svg"
+        width: VLCStyle.dp(24, VLCStyle.scale)
+        height: VLCStyle.dp(24, VLCStyle.scale)
+        sourceSize.width: width
+        sourceSize.height: height
+        smooth: true
+    }
     onClicked: {
         MainCtx.playqueuePanel.visible = !MainCtx.playqueuePanel.visible
         if (MainCtx.playqueuePanel.visible && MainCtx.playqueuePanel.docked) {

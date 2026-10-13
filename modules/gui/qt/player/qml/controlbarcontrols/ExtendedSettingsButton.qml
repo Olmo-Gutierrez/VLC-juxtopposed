@@ -28,6 +28,16 @@ Widgets.IconToolButton {
 
     text: VLCIcons.effect_filter
 
+    // Figma bar glyph
+    contentItem: Image {
+        source: "qrc:/icons/bar_settings.svg"
+        width: VLCStyle.dp(24, VLCStyle.scale)
+        height: VLCStyle.dp(24, VLCStyle.scale)
+        sourceSize.width: width
+        sourceSize.height: height
+        smooth: true
+    }
+
     description: qsTr("Extended settings")
 
     AccessibleCompat.id: "extendedSettingsButton"

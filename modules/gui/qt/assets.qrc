@@ -12,6 +12,15 @@
     </qresource>
     <qresource prefix="/icons">
         <file alias="atob.svg">pixmaps/icons/atob.svg</file>
+        <file alias="queue.svg">pixmaps/icons/queue.svg</file>
+        <file alias="bar_previous.svg">pixmaps/icons/bar_previous.svg</file>
+        <file alias="bar_next.svg">pixmaps/icons/bar_next.svg</file>
+        <file alias="bar_fullscreen.svg">pixmaps/icons/bar_fullscreen.svg</file>
+        <file alias="bar_settings.svg">pixmaps/icons/bar_settings.svg</file>
+        <file alias="bar_volume_high.svg">pixmaps/icons/bar_volume_high.svg</file>
+        <file alias="bar_volume_medium.svg">pixmaps/icons/bar_volume_medium.svg</file>
+        <file alias="bar_volume_low.svg">pixmaps/icons/bar_volume_low.svg</file>
+        <file alias="bar_volume_muted.svg">pixmaps/icons/bar_volume_muted.svg</file>
         <file alias="ic_fluent_arrow_download_24_regular.svg">pixmaps/icons/ic_fluent_arrow_download_24_regular.svg</file>
         <file alias="ic_fluent_arrow_sync_24_regular.svg">pixmaps/icons/ic_fluent_arrow_sync_24_regular.svg</file>
     </qresource>

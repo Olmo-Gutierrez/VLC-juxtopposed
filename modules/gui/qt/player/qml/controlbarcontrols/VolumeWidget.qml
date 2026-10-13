@@ -74,6 +74,19 @@ T.Pane {
                 else
                     return VLCIcons.volume_high
             }
+            // Figma volume states (Icon set): high / medium / low / muted
+            contentItem: Image {
+                readonly property string _name: _player.muted || _player.volume === 0 ? "muted"
+                                                : _player.volume < .33 ? "low"
+                                                : _player.volume <= .66 ? "medium" : "high"
+                source: "qrc:/icons/bar_volume_" + _name + ".svg"
+                width: VLCStyle.dp(24, VLCStyle.scale)
+                height: VLCStyle.dp(24, VLCStyle.scale)
+                sourceSize.width: width
+                sourceSize.height: height
+                smooth: true
+            }
+
             description: qsTr("Mute")
 
             AccessibleCompat.id: "muteButton"
