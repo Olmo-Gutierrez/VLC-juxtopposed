@@ -53,7 +53,8 @@ T.Pane {
     readonly property real sliderY: mapFromItem(contentItem, 0, contentItem.sliderY).y
     property int textPosition: ControlBar.TimeTextPosition.AboveSlider
     property int identifier: -1
-    property real sliderHeight: VLCStyle.heightBar_xxsmall
+    // Figma Controls bar: thicker seek track
+    property real sliderHeight: VLCStyle.dp(28, VLCStyle.scale)
     property real bookmarksHeight: VLCStyle.controlBarBookmarksHeight
     property bool showRemainingTime: true
 
@@ -252,6 +253,24 @@ T.Pane {
                 id: trackPositionSlider
 
                 barHeight: root.sliderHeight
+
+                // Figma Controls bar: 8x24 orange handle, radius 4
+                handleWidthOverride: VLCStyle.dp(8, VLCStyle.scale)
+                handleHeightOverride: VLCStyle.dp(24, VLCStyle.scale)
+                handleRadiusOverride: VLCStyle.dp(4, VLCStyle.scale)
+                handleColorOverride: "#D37918"
+                // Figma Controls bar: track #090909, played part #371F06
+                backgroundColor: "#090909"
+                progressColorOverride: "#371F06"
+                handleAlwaysVisible: true
+                bufferVisible: false
+                toolTipVisible: false
+                trackRadiusOverride: VLCStyle.dp(6, VLCStyle.scale)
+                progressRadiusOverride: VLCStyle.dp(4, VLCStyle.scale)
+                progressInsetOverride: VLCStyle.dp(2, VLCStyle.scale)
+                // Figma track is fixed: no hover/drag scaling
+                hoverScalingFactor: 1.0
+                largeHandleFactor: 1.0
 
                 Accessible.role: Accessible.Slider
                 Accessible.name: qsTr("Progress")
