@@ -1,3 +1,132 @@
+# VLC Redesign
+
+An unofficial, work-in-progress redesign of the **VLC media player** interface, built 1:1 in VLC's own Qt/QML
+interface. Playback, codecs and everything else stay VLC; only how it looks and feels changes.
+
+**The design is 100% based on Juxtopposed's video
+[*I Redesigned VLC After 25 Years*](https://www.youtube.com/watch?v=ERFeOgqk324).** Every layout, size, colour and
+icon comes from the Figma file ("VLC Redesign", community) shown in that video, and nothing here is original design
+work. This project is not affiliated with or endorsed by VideoLAN or Juxtopposed.
+
+> **Status: in progress.** The bottom control bar is built; the rest of the interface still looks like stock VLC.
+> See [Roadmap](#roadmap).
+
+## What it looks like today
+
+![The redesigned player: windowed video in the dark frame with the new control bar](design/screenshots/player.png)
+
+*Windowed player with pinned controls, playing a plain generated test clip. The top bar is still stock VLC; it is
+Phase 3.*
+
+The control bar next to the Figma frame it is built from (same 1920 px width, so positions line up):
+
+![Figma control bar above the same bar in this build](design/screenshots/control-bar-vs-figma.png)
+
+*The time, the seek position and the pause glyph differ only because the two were captured at different moments.*
+
+## Progress so far
+
+Done and checked against the Figma frame by capturing the running app:
+
+- **Control bar layout:** previous / play / next at the bottom left (30, 54 and 30 px slots), seek bar between the
+  time labels, volume group, then audio, subtitles, settings and lists. Positions match Figma within 1 to 2 px.
+  The layout is profile-driven, so the bar stays customisable.
+- **Time labels:** Inter 15 px in `HH:MM:SS`.
+- **Play and pause:** drawn from the Figma components (orange play, grey pause).
+- **Seek bar:** Figma track, played colour, inset and handle; no tooltip or buffer block; dragging to the far left
+  reaches `00:00:00`.
+- **Cone volume slider:** Figma cone, gradient fill and overlay; the end of the cone is VLC's maximum volume.
+- **Windowed video frame:** with `--qt-pin-controls` the video sits in the dark rounded Figma frame.
+- **Icons:** the control bar uses the Figma icons, and the whole set (206 SVGs) is collected in
+  [`design/figma-icons`](design/figma-icons) for the next screens. The eight two-tone menu header icons are added
+  but not placed in any menu yet.
+
+Placed but not working yet: the audio and subtitles buttons (they show the icon and do nothing until Phase 4).
+
+## Roadmap
+
+Each feature is one commit, checked by capturing the running app and comparing it with the matching Figma frame
+(source | render | difference), not by eye.
+
+### Phase 1: Design tokens and foundations
+- [ ] **Colour palette and theme tokens.** Colours are collected in [`design/palette`](design/palette) and used in
+  the control bar; still to do: apply them app-wide as theme tokens.
+- [ ] **Icon system foundation.** Monochrome control icons are in use in the bottom bar; the two-tone menu header
+  icons exist but replace the stock ones screen by screen as those screens are built.
+
+### Phase 2: Main playback controls and bottom bar
+- [x] **Playback controls layout.** Play/pause at the bottom left, previous and next flanking it. Fullscreen leaves
+  the bottom bar and comes back in the top bar (Phase 3).
+- [ ] **Queue vs playlist toggle.** The queue icon is in; drag-and-drop ingestion and the quick add-file icons are
+  still to do.
+- [x] **Deformed cone volume slider.**
+- [ ] **Thick bottom seek bar and hover preview.** The bar is done; the scrubbing thumbnail preview is still to do.
+
+### Phase 3: Top navigation bar and window chrome
+- [ ] **Top overlay and hover behaviour.** Auto-hiding top and bottom bars with independent hover triggers; the top
+  bar carries the title, window controls, fullscreen and picture-in-picture.
+
+### Phase 4: Audio, subtitle and track management flyouts
+- [ ] **Quick audio and subtitle popovers.**
+- [ ] **Enhanced subtitle loader dialog.**
+
+### Phase 5: Quick settings sidebar
+- [ ] **Four-tab right sidebar** (Subtitles, Audio, Video, Playback).
+
+### Phase 6: Media library, music player and stream browser
+- [ ] **Top-title quick library switcher.**
+- [ ] **Dedicated music mode view.**
+- [ ] **Stream and playlist manager.**
+
+### Phase 7: Settings overhaul and onboarding
+- [ ] **Hotkeys dialog.**
+- [ ] **Consolidated settings tree.**
+- [ ] **Customisation and onboarding system.**
+
+## Design assets
+
+[`design/`](design/) is a library to pick from while building screens. Nothing in it is compiled into VLC.
+
+- [`design/figma-icons/`](design/figma-icons/): all 206 Figma icon variants as SVG, with a contact sheet
+  (`index.html`) and a machine-readable index.
+- [`design/palette/`](design/palette/): the colour sheet as shown in the video next to the matching Figma paint
+  styles, and every Figma style as JSON.
+
+![The main colours of the redesign: accent oranges, foreground greys and dark surfaces](design/palette/palette-readme.png)
+
+Figma is the only reference for sizes, colours and icons. Video frames are used for orientation only, because the
+video is compressed and its colours drift by a few values.
+
+## Building and running
+
+This is VLC's code base with changes limited to `modules/gui/qt/` (QML, a few C++ files, icons and a bundled font).
+Build it as you would VLC: see [`INSTALL`](INSTALL) and the
+[VLC build guides](https://wiki.videolan.org/Category:Building). Qt 6 is required.
+
+Useful flags while developing:
+
+- `--qt-pin-controls` pins the controls under the video (needed to see the video frame).
+- `--no-qt-privacy-ask` skips the first-run privacy dialog.
+
+## Branches
+
+- `redesign`: the redesign, as one commit per finished and verified feature, on top of upstream VLC.
+- `master`: a plain mirror of upstream VLC (`code.videolan.org/videolan/vlc`), so syncing upstream is a
+  fast-forward and the redesign is rebased on it.
+
+## Credits and licence
+
+- VLC is by the VideoLAN community and is released under the GPLv2 (or later); libVLC under the LGPLv2 (or later).
+  The redesign is released under the same licences.
+- [Inter](https://rsms.me/inter/) 4.0 is bundled for the time labels under the SIL Open Font License
+  (`modules/gui/qt/pixmaps/Inter-LICENSE.txt`).
+- The design, including the Figma icons and colours, is Juxtopposed's work from the video above. Check the Figma
+  file's licence before reusing them outside this project.
+
+---
+
+# About VLC (upstream README)
+
 # VLC media player
 
 **VLC** is a libre and open source **media player** and **multimedia engine**,
