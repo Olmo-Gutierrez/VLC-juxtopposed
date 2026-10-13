@@ -32,13 +32,52 @@ T.Pane {
 
     readonly property color sliderColor: {
         const theme = volControl.colorContext
-        return (volControl.position > _fullvolpos) ? theme.fg.negative : theme.fg.primary
+        return (root._player.volume > 1.0) ? theme.fg.negative : theme.fg.primary
     }
 
     readonly property var _player: paintOnly ? ({ muted: false, volume: .5 }) : Player
     readonly property int _maxvol: MainCtx.maxVolume
     readonly property real _fullvolpos: 100 / _maxvol
     readonly property real _maxvolpos: _maxvol / 100
+
+    // Figma 'volume' component (244:184): the fill width, in px of the 89 px cone, for the volume variants
+    // from 0 to 100 %. The cone is not linear in the volume: 100 % fills 63 px.
+    readonly property var _fillTable: [[0, 0], [10, 7], [20, 14], [30, 20], [40, 26], [50, 33], [60, 41],
+                                       [70, 48], [80, 53], [90, 58], [100, 63]]
+    readonly property real _coneWidth: 89
+    // The last stretch of the cone (63 px to 88 px, the Figma 100 % to 200 % variants) covers the volume
+    // from 100 % up to the maximum volume of the application, so the end of the cone is the maximum
+    readonly property real _fullPx: 63
+    readonly property real _endPx: 88
+
+    // Volume (1.0 = 100 %) -> slider position (fraction of the cone width)
+    function _volumeToPosition(volume) {
+        volume = Math.max(0, Math.min(volume, root._maxvolpos))
+        if (volume > 1.0)
+            return (root._fullPx + (root._endPx - root._fullPx) * (volume - 1.0) / Math.max(root._maxvolpos - 1.0, 0.01)) / root._coneWidth
+
+        const percent = volume * 100
+        const t = root._fillTable
+        for (let i = 1; i < t.length; ++i) {
+            if (percent <= t[i][0])
+                return (t[i - 1][1] + (t[i][1] - t[i - 1][1]) * (percent - t[i - 1][0]) / (t[i][0] - t[i - 1][0])) / root._coneWidth
+        }
+        return root._fullPx / root._coneWidth
+    }
+
+    // Slider position (fraction of the cone width) -> volume (1.0 = 100 %), the inverse of the above
+    function _positionToVolume(position) {
+        const px = Math.max(0, Math.min(root._endPx, position * root._coneWidth))
+        if (px > root._fullPx)
+            return 1.0 + (root._maxvolpos - 1.0) * (px - root._fullPx) / (root._endPx - root._fullPx)
+
+        const t = root._fillTable
+        for (let i = 1; i < t.length; ++i) {
+            if (px <= t[i][1])
+                return (t[i - 1][0] + (t[i][0] - t[i - 1][0]) * (px - t[i - 1][1]) / (t[i][1] - t[i - 1][1])) / 100
+        }
+        return 1.0
+    }
 
     implicitWidth: Math.max(implicitBackgroundWidth + leftInset + rightInset,
                             implicitContentWidth + leftPadding + rightPadding)
@@ -141,8 +180,47 @@ T.Pane {
 
             color: root.sliderColor
 
+            // Figma volume has no drag handle: keep the level visible without the default handle
+            handle: Item {
+                visible: false
+            }
+
+            // Figma 'volume' (Controls instance 491:1733): a cone-shaped track (89x28) with the
+            // gradient level drawn on top and clipped to the current volume.
+            background: Item {
+                id: volumeBackground
+
+                x: volControl.leftPadding
+                y: volControl.topPadding + (volControl.availableHeight - height) / 2
+                width: VLCStyle.dp(89, VLCStyle.scale)
+                height: VLCStyle.dp(28, VLCStyle.scale)
+
+                Image {
+                    anchors.fill: parent
+                    source: "qrc:/icons/bar_volume_track.svg"
+                    smooth: true
+                }
+
+                Item {
+                    id: volumeLevel
+
+                    width: volumeBackground.width * volControl.position
+                    height: volumeBackground.height
+                    clip: true
+
+                    Image {
+                        width: volumeBackground.width
+                        height: volumeBackground.height
+                        source: "qrc:/icons/bar_volume_fill.svg"
+                        smooth: true
+                    }
+                }
+            }
+
+            // The slider position is the fraction of the cone width; the volume comes from the Figma fill table
+            // and is capped at the maximum volume in _adjustPlayerVolume
             from: 0
-            to: root._maxvolpos
+            to: 1
             opacity: _player.muted ? 0.5 : 1
 
             enabled: !root.paintOnly // disables event handling depending on this
@@ -181,14 +259,15 @@ T.Pane {
 
             function _syncVolumeWithPlayer() {
                 volControl._inhibitPlayerVolumeUpdate = true
-                volControl.value = _player.volume
+                volControl.value = root._volumeToPosition(_player.volume)
                 volControl._inhibitPlayerVolumeUpdate = false
             }
 
             function _adjustPlayerVolume() {
                 Player.muted = false
 
-                let value = volControl.value
+                // The cone reaches 200 %, the player is limited to the maximum volume
+                let value = Math.min(root._positionToVolume(volControl.value), root._maxvolpos)
 
                 // NOTE: We are clamping the value to make it easier to restore the default volume.
                 if (_shiftPressed === false) {
@@ -200,7 +279,7 @@ T.Pane {
 
                 Player.volume = value
 
-                volControl.value = value
+                volControl.value = root._volumeToPosition(value)
             }
 
             Component.onCompleted: {
@@ -254,13 +333,12 @@ T.Pane {
 
                 parent: volControl.background
 
-                x : parent.width * root._fullvolpos
+                x : parent.width * root._volumeToPosition(1.0)
                 width: VLCStyle.dp(1, VLCStyle.scale)
                 height: parent.height
                 radius: VLCStyle.dp(2, VLCStyle.scale)
-
-                // NOTE: This shouldn't be visible when the volume stops before a 100.
-                visible: (root._maxvol > 100)
+                // Figma volume has no 100% tick mark; keep the mouse area, hide the line
+                visible: false
 
                 // FIXME: tick mark is not visible when it's over slider
                 color: root.sliderColor

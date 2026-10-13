@@ -25,6 +25,8 @@
         <file alias="bar_volume_medium.svg">pixmaps/icons/bar_volume_medium.svg</file>
         <file alias="bar_volume_low.svg">pixmaps/icons/bar_volume_low.svg</file>
         <file alias="bar_volume_muted.svg">pixmaps/icons/bar_volume_muted.svg</file>
+        <file alias="bar_volume_track.svg">pixmaps/icons/bar_volume_track.svg</file>
+        <file alias="bar_volume_fill.svg">pixmaps/icons/bar_volume_fill.svg</file>
         <file alias="ic_fluent_arrow_download_24_regular.svg">pixmaps/icons/ic_fluent_arrow_download_24_regular.svg</file>
         <file alias="ic_fluent_arrow_sync_24_regular.svg">pixmaps/icons/ic_fluent_arrow_sync_24_regular.svg</file>
     </qresource>

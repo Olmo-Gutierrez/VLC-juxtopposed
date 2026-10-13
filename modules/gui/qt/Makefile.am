@@ -819,6 +819,8 @@ libqt_plugin_la_RES = \
 	pixmaps/icons/bar_volume_medium.svg \
 	pixmaps/icons/bar_volume_low.svg \
 	pixmaps/icons/bar_volume_muted.svg \
+	pixmaps/icons/bar_volume_track.svg \
+	pixmaps/icons/bar_volume_fill.svg \
 	pixmaps/icons/ic_audiosub.svg \
 	pixmaps/icons/back.svg \
 	pixmaps/icons/ic_fluent_bookmark.svg \
