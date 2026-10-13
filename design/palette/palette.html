@@ -1,0 +1,35 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Palette as shown in the video</title>
+<style>
+html, body { margin: 0; background: #000; }
+.stage { position: relative; width: 1920px; height: 1080px; overflow: hidden; background: #000;
+  font: 13px/1.25 Inter, "Segoe UI", sans-serif; }
+.cone { position: absolute; left: 197px; top: 296px; width: 488px; height: 488px; }
+.sw { position: absolute; box-sizing: border-box; border-radius: 28px; padding: 14px 12px; display: flex;
+  flex-direction: column; justify-content: flex-end; gap: 2px; }
+.sw.big { border-radius: 40px; padding: 24px; font-size: 16px; }
+.sw .v { font-weight: 700; font-size: 1.25em; letter-spacing: .02em; }
+.sw .n { opacity: .85; }
+.sw .f { opacity: .85; font-size: .92em; margin-top: 4px; }
+.cap { position: absolute; left: 867px; top: 120px; color: #8F8F8F; font: 14px Inter, "Segoe UI", sans-serif; }
+.cap2 { position: absolute; left: 867px; top: 940px; width: 714px; color: #6B6B6B; font: 12px/1.4 Inter, "Segoe UI", sans-serif; }
+</style>
+<div class="stage">
+<img class="cone" src="../figma-icons/vlc.svg" alt="">
+<div class="cap">Palette as shown in the video at 00:00:58. Large value: sampled from the video frame. Below it: the matching Figma paint style.</div>
+<div class="sw big" style="left:867px;top:187px;width:341px;height:341px;background:#D17816;color:#000000;"><span class="v">#D17816</span><span class="n">Accent</span><span class="f"><b>Dark/Accent/Main</b><br>Figma #D37918</span></div>
+<div class="sw" style="left:1240px;top:187px;width:154px;height:154px;background:#FB9529;color:#000000;"><span class="v">#FB9529</span><span class="n">Bright</span><span class="f"><b>Dark/Accent/Bright</b><br>Figma #FC9729</span></div>
+<div class="sw" style="left:1427px;top:187px;width:154px;height:154px;background:#65390B;color:#FFFFFF;"><span class="v">#65390B</span><span class="n">Brown</span><span class="f"><b>no Figma style</b><br>nearest Dark/BG/Accent Bright<br>#371F06</span></div>
+<div class="sw" style="left:1240px;top:374px;width:154px;height:154px;background:#AA6113;color:#FFFFFF;"><span class="v">#AA6113</span><span class="n">Dim</span><span class="f"><b>Dark/Accent/DIm</b><br>Figma #AB6314</span></div>
+<div class="sw" style="left:1427px;top:374px;width:154px;height:154px;background:#442607;color:#FFFFFF;"><span class="v">#442607</span><span class="n">Deep brown</span><span class="f"><b>no Figma style</b><br>nearest Dark/BG/Accent Bright<br>#371F06</span></div>
+<div class="sw" style="left:867px;top:564px;width:154px;height:154px;background:#C5C5C5;color:#000000;"><span class="v">#C5C5C5</span><span class="n">Grey 1</span><span class="f"><b>Dark/FG/2</b><br>Figma #C6C6C6</span></div>
+<div class="sw" style="left:1054px;top:564px;width:154px;height:154px;background:#8F8F8F;color:#000000;"><span class="v">#8F8F8F</span><span class="n">Grey 2</span><span class="f"><b>Dark/FG/A2</b><br>Figma #8F8F8F</span></div>
+<div class="sw" style="left:1240px;top:564px;width:154px;height:154px;background:#6B6B6B;color:#FFFFFF;"><span class="v">#6B6B6B</span><span class="n">Grey 3</span><span class="f"><b>Dark/FG/A3</b><br>Figma #6B6B6B</span></div>
+<div class="sw" style="left:1427px;top:564px;width:154px;height:154px;background:#3B3B3B;color:#FFFFFF;"><span class="v">#3B3B3B</span><span class="n">Grey 4</span><span class="f"><b>Dark/Divider/Bright</b><br>Figma #373737</span></div>
+<div class="sw" style="left:867px;top:755px;width:154px;height:154px;background:#1A1A1A;color:#FFFFFF;border:3px solid #323232;"><span class="v">#1A1A1A</span><span class="n">Surface 1</span><span class="f"><b>Dark/BG/A3</b><br>Figma #1B1B1B</span></div>
+<div class="sw" style="left:1054px;top:755px;width:154px;height:154px;background:#141414;color:#FFFFFF;border:3px solid #323232;"><span class="v">#141414</span><span class="n">Surface 2</span><span class="f"><b>Dark/BG/A5</b><br>Figma #151515</span></div>
+<div class="sw" style="left:1240px;top:755px;width:154px;height:154px;background:#0D0D0D;color:#FFFFFF;border:3px solid #323232;"><span class="v">#0D0D0D</span><span class="n">Surface 3</span><span class="f"><b>Dark/BG/B1</b><br>Figma #0E0E0E</span></div>
+<div class="sw" style="left:1427px;top:755px;width:154px;height:154px;background:#000000;color:#FFFFFF;border:3px solid #323232;"><span class="v">#000000</span><span class="n">Surface 4</span><span class="f"><b>no Figma style</b><br>nearest Dark/BG/B2<br>#090909</span></div>
+<div class="cap2">Video values drift by 1–2 per channel from compression. The Figma styles are the source of truth; the app uses those.</div>
+</div>

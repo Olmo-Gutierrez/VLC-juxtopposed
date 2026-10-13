@@ -16,3 +16,11 @@ All 206 variants of the Figma `Icon` component set (node `42:356`), exported as 
   `#D37918`. Qt's SVG renderer draws `currentColor` black, so the files keep literals.
 - To use an icon in the app, copy it to `modules/gui/qt/pixmaps/icons/` and add it to `assets.qrc`, `Makefile.am` and
   `meson.build`, like the existing `bar_*.svg`.
+
+## `palette/`
+- `palette.html` / `palette.png`: the swatch sheet as it appears in the video at 00:00:58, same layout. Each swatch
+  shows the colour sampled from the video frame and the Figma paint style it corresponds to.
+  Brown `#65390B` and deep brown `#442607` have no Figma style.
+- `tokens.html` / `tokens.png`: every Figma paint style (49), Dark and Light.
+- `tokens.json`: the same data for code. Video values drift by 1 or 2 per channel from compression (for example
+  `#D17816` in the video is `#D37918` in Figma); Figma is the source of truth.
