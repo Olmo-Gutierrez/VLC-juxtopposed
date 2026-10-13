@@ -60,6 +60,9 @@ FocusScope {
                                         &&
                                         (MainCtx.intfMainWindow.visibility !== Window.FullScreen))
 
+    // Figma Frame 312: the framed video layout is the windowed one, with the controls under the video
+    readonly property bool _videoFramed: MainCtx.hasEmbededVideo && _controlsUnderVideo
+
     property bool _keyPressed: false
 
     // Settings
@@ -260,6 +263,11 @@ FocusScope {
                     id: videoSurface
 
                     anchors.fill: parent
+
+                    // Figma Frame 312: the video keeps a 10 px frame on the sides and 1 px below in windowed mode
+                    anchors.leftMargin: rootPlayer._videoFramed ? VLCStyle.dp(10, VLCStyle.scale) : 0
+                    anchors.rightMargin: rootPlayer._videoFramed ? VLCStyle.dp(10, VLCStyle.scale) : 0
+                    anchors.bottomMargin: rootPlayer._videoFramed ? VLCStyle.dp(1, VLCStyle.scale) : 0
 
                     // With regard to `ViewBlockingRectangle`, we
                     // do not need to prevent painting anything
@@ -929,6 +937,32 @@ FocusScope {
         }
     }
 
+    // Redesign (Figma Frame 312, 6586:17373): in windowed mode the video area has a #1B1B1B frame, 10 px on the
+    // sides and 1 px below (the rest of the stroke is behind the control bar), with rounded inner corners
+    // (radius 9). The frame is a transparent rectangle with a thick border drawn around the visible video area
+    // (the border is wide enough that its outer edge stays off screen), so the inner corners get
+    // radius = radius - border.width = 9. It sits above the video and below the bars.
+    Rectangle {
+        id: videoFrame
+
+        readonly property real sideWidth: VLCStyle.dp(10, VLCStyle.scale)
+        readonly property real bottomWidth: VLCStyle.dp(1, VLCStyle.scale)
+        readonly property real innerRadius: VLCStyle.dp(9, VLCStyle.scale)
+        readonly property real outside: VLCStyle.dp(50, VLCStyle.scale)
+
+        visible: rootPlayer._videoFramed
+
+        x: playerSpecializationLoader.x + sideWidth - outside
+        y: playerSpecializationLoader.y - outside
+        width: playerSpecializationLoader.width - 2 * sideWidth + 2 * outside
+        height: playerSpecializationLoader.height - bottomWidth + 2 * outside
+
+        color: "transparent"
+        radius: outside + innerRadius
+        border.width: outside
+        border.color: "#1B1B1B"
+    }
+
     TopBar {
         id: topBar
 
@@ -1342,7 +1376,7 @@ FocusScope {
             // Figma Controls bar: solid dark bar, independent of the window theme and video state
             opacity: 1.0
 
-            color: windowTheme.bg.primary
+            color: "#1B1B1B"
         }
 
         FadeControllerStateGroup {
