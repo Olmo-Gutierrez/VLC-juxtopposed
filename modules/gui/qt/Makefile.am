@@ -810,6 +810,8 @@ libqt_plugin_la_RES = \
 	pixmaps/icons/bar_next.svg \
 	pixmaps/icons/bar_fullscreen.svg \
 	pixmaps/icons/bar_settings.svg \
+	pixmaps/icons/bar_audio.svg \
+	pixmaps/icons/bar_subtitles.svg \
 	pixmaps/icons/bar_play.svg \
 	pixmaps/icons/bar_pause.svg \
 	pixmaps/icons/bar_volume_high.svg \
@@ -1223,6 +1225,7 @@ libqml_module_playercontrols_a_QML = \
 	player/qml/controlbarcontrols/ArtworkInfoWidget.qml \
 	player/qml/controlbarcontrols/AspectRatioWidget.qml \
 	player/qml/controlbarcontrols/AtoBButton.qml \
+	player/qml/controlbarcontrols/AudioButton.qml \
 	player/qml/controlbarcontrols/BackButton.qml \
 	player/qml/controlbarcontrols/BookmarkButton.qml \
 	player/qml/controlbarcontrols/ChapterNextButton.qml \
@@ -1259,6 +1262,7 @@ libqml_module_playercontrols_a_QML = \
 	player/qml/controlbarcontrols/SnapshotButton.qml \
 	player/qml/controlbarcontrols/SpacerWidget.qml \
 	player/qml/controlbarcontrols/StopButton.qml \
+	player/qml/controlbarcontrols/SubtitleButton.qml \
 	player/qml/controlbarcontrols/TeletextButton.qml \
 	player/qml/controlbarcontrols/TeletextColorButton.qml \
 	player/qml/controlbarcontrols/TeletextWidget.qml \
