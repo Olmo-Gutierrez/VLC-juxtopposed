@@ -52,12 +52,18 @@ Each feature is one commit, checked by capturing the running app and comparing i
 (source | render | difference), not by eye.
 
 ### Phase 1: Design tokens and foundations
+
+![A sample of the Figma icon set used by the redesign](design/roadmap/phase-1-icons.png)
+
+*A sample of the Figma icon set; all 206 are in [`design/figma-icons`](design/figma-icons).*
 - [ ] **Colour palette and theme tokens.** Colours are collected in [`design/palette`](design/palette) and used in
   the control bar; still to do: apply them app-wide as theme tokens.
 - [ ] **Icon system foundation.** Monochrome control icons are in use in the bottom bar; the two-tone menu header
   icons exist but replace the stock ones screen by screen as those screens are built.
 
 ### Phase 2: Main playback controls and bottom bar
+
+![Figma windowed player with the bottom bar](design/roadmap/phase-2-bottom-bar.png)
 - [x] **Playback controls layout.** Play/pause at the bottom left, previous and next flanking it. Fullscreen leaves
   the bottom bar and comes back in the top bar (Phase 3).
 - [ ] **Queue vs playlist toggle.** The queue icon is in; drag-and-drop ingestion and the quick add-file icons are
@@ -66,22 +72,32 @@ Each feature is one commit, checked by capturing the running app and comparing i
 - [x] **Thick bottom seek bar and hover preview.** The bar and the frame preview above it while hovering are done.
 
 ### Phase 3: Top navigation bar and window chrome
+
+![Figma player with the top bar](design/roadmap/phase-3-top-bar.png)
 - [ ] **Top overlay and hover behaviour.** Auto-hiding top and bottom bars with independent hover triggers; the top
   bar carries the title, window controls, fullscreen and picture-in-picture.
 
 ### Phase 4: Audio, subtitle and track management flyouts
+
+![Figma subtitle loader dialog](design/roadmap/phase-4-subtitle-loader.png)
 - [ ] **Quick audio and subtitle popovers.**
 - [ ] **Enhanced subtitle loader dialog.**
 
 ### Phase 5: Quick settings sidebar
+
+![Figma quick settings sidebar, Video panel](design/roadmap/phase-5-sidebar.png)
 - [ ] **Four-tab right sidebar** (Subtitles, Audio, Video, Playback).
 
 ### Phase 6: Media library, music player and stream browser
+
+![Figma music mode album view](design/roadmap/phase-6-music-mode.png)
 - [ ] **Top-title quick library switcher.**
 - [ ] **Dedicated music mode view.**
 - [ ] **Stream and playlist manager.**
 
 ### Phase 7: Settings overhaul and onboarding
+
+![Figma global settings](design/roadmap/phase-7-settings.png)
 - [ ] **Hotkeys dialog.**
 - [ ] **Consolidated settings tree.**
 - [ ] **Customisation and onboarding system.**
