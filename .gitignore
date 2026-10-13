@@ -63,3 +63,7 @@ static-lib/
 !buildsystem/
 !build.rs
 !extras/package/apple/build.sh
+
+# Local-only: API keys and redesign working notes (never commit)
+.env
+.redesign/
