@@ -1,7 +1,7 @@
-# VLC Redesign
+# Juxtopposed VLC Redesign
 
-An unofficial, work-in-progress redesign of the **VLC media player** interface, built 1:1 in VLC's own Qt/QML
-interface. Playback, codecs and everything else stay VLC; only how it looks and feels changes.
+An unofficial, work-in-progress **Juxtopposed VLC redesign** of the **VLC media player** interface, built 1:1 in
+VLC's own Qt/QML interface. Playback, codecs and everything else stay VLC; only how it looks and feels changes.
 
 **The design is 100% based on Juxtopposed's video
 [*I Redesigned VLC After 25 Years*](https://www.youtube.com/watch?v=ERFeOgqk324).** Every layout, size, colour and
@@ -10,6 +10,8 @@ work. This project is not affiliated with or endorsed by VideoLAN or Juxtopposed
 
 > **Status: in progress.** The bottom control bar is built; the rest of the interface still looks like stock VLC.
 > See [Roadmap](#roadmap).
+
+Project site: <https://olmo-gutierrez.github.io/VLC-juxtopposed/>
 
 ## What it looks like today
 
@@ -45,6 +47,25 @@ Done and checked against the Figma frame by capturing the running app:
   but not placed in any menu yet.
 
 Placed but not working yet: the audio and subtitles buttons (they show the icon and do nothing until Phase 4).
+
+## FAQ
+
+**Is there a download?** No. There is no prebuilt installer yet, so build it from source as described in
+[Building and running](#building-and-running). Installers offered on other sites are not from this project.
+
+**Is this official?** No. It is not affiliated with or endorsed by VideoLAN or Juxtopposed. For the official player,
+see [videolan.org](https://www.videolan.org/vlc/).
+
+**Who designed it?** Juxtopposed (spelled with two p's, not *juxtaposed*), in the video
+[*I Redesigned VLC After 25 Years*](https://www.youtube.com/watch?v=ERFeOgqk324). The layouts, sizes, colours and
+icons come from the community Figma file "VLC Redesign" shown in that video.
+
+**Does it change playback?** No. Playback, codecs and everything else stay VLC. Only the look and the interface change.
+
+**Does it have skins or themes?** No. It changes VLC's built-in Qt interface. It is not a skin or theme pack.
+
+**Where are the icons and colours?** The 206 Figma icons are in [`design/figma-icons`](design/figma-icons), and the
+colour sheet is in [`design/palette`](design/palette). See [Design assets](#design-assets).
 
 ## Roadmap
 
