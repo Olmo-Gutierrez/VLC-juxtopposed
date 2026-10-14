@@ -11,7 +11,23 @@ work. This project is not affiliated with or endorsed by VideoLAN or Juxtopposed
 > **Status: in progress.** The bottom control bar is built; the rest of the interface still looks like stock VLC.
 > See [Roadmap](#roadmap).
 
-Project site: <https://olmo-gutierrez.github.io/VLC-juxtopposed/>
+**Links:** [Project site](https://olmo-gutierrez.github.io/VLC-juxtopposed/) · [Video](https://www.youtube.com/watch?v=ERFeOgqk324) · [Roadmap](#roadmap) · [FAQ](#faq) · [Build](#building-and-running)
+
+## At a glance
+
+| Area | Status |
+| --- | --- |
+| Bottom control bar: layout, seek bar, cone volume, icons | Done, checked against Figma |
+| Seek preview and windowed video frame | Done |
+| Audio and subtitle buttons | Placed; they do nothing yet (Phase 4) |
+| Top bar and window controls | Not started (Phase 3) |
+| Flyouts, sidebar, library and settings | Not started (Phases 4 to 7) |
+
+To get the source (this is the full VLC source tree, so the clone is large):
+
+```sh
+git clone https://github.com/Olmo-Gutierrez/VLC-juxtopposed.git
+```
 
 ## What it looks like today
 
