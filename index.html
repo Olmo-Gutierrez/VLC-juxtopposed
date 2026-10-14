@@ -9,6 +9,7 @@
   <meta name="theme-color" content="#111111" media="(prefers-color-scheme: dark)">
   <meta name="theme-color" content="#f7f6f4" media="(prefers-color-scheme: light)">
   <link rel="canonical" href="https://olmo-gutierrez.github.io/VLC-juxtopposed/">
+  <link rel="icon" type="image/png" href="vlc-icon.png">
 
   <meta property="og:type" content="website">
   <meta property="og:title" content="Juxtopposed VLC Redesign">
@@ -109,7 +110,8 @@
       display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between;
       gap: .5rem 1.25rem; min-height: 3.75rem;
     }
-    .brand { font-weight: 700; color: var(--text); text-decoration: none; }
+    .brand { display: inline-flex; align-items: center; gap: .55rem; font-weight: 700; color: var(--text); text-decoration: none; }
+    .brand img { width: 28px; height: 28px; }
     .site-header nav ul { display: flex; flex-wrap: wrap; gap: .4rem 1.25rem; list-style: none; margin: 0; padding: 0; }
     .site-header nav a {
       color: var(--muted); text-decoration: none; font-size: .95rem; padding-block: .2rem;
@@ -271,7 +273,10 @@
 
   <header class="site-header">
     <div class="wrap bar">
-      <a class="brand" href="#top">Juxtopposed VLC Redesign</a>
+      <a class="brand" href="#top" aria-label="Juxtopposed VLC Redesign, back to top">
+        <img src="vlc-icon.png" width="28" height="28" alt="" aria-hidden="true">
+        <span>JVLC</span>
+      </a>
       <nav aria-label="Page sections">
         <ul>
           <li><a href="#progress">Progress</a></li>
